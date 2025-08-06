@@ -1,5 +1,5 @@
 import React from "react";
-import { Grid, Typography, Fab, Paper, Box } from "@mui/material";
+import { Grid, Typography, Fab, Paper, Box, Button } from "@mui/material";
 import SportsEsportsIcon from "@mui/icons-material/SportsEsports";
 import { useNavigate } from "react-router-dom";
 import { App_Name } from "@my-app/common";
@@ -38,7 +38,7 @@ export default function Main() {
             variant="h2"
             component="h1"
             color="primary"
-            sx={{ fontWeight: "bold" }}
+            sx={{ fontWeight: "bold", mt: 10 }} // Añade margen superior
           >
             {App_Name}
           </Typography>
@@ -74,8 +74,18 @@ export default function Main() {
             component="img"
             src="/images/colors.png"
             alt="Magic Colors Wheel"
-            sx={{ width: 240, userSelect: "none", pointerEvents: "none" }}
+            sx={{ width: 220, userSelect: "none", pointerEvents: "none" }}
           />
+        </Grid>
+        {/* Botón acceso admin */}
+        <Grid item>
+          <Button
+            variant="outlined"
+            color="primary"
+            onClick={() => navigate("/admin")}
+          >
+            Panel de Admin
+          </Button>
         </Grid>
       </Grid>
     </div>
