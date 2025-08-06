@@ -22,6 +22,7 @@ import HomeIcon from "@mui/icons-material/Home";
 import PeopleIcon from "@mui/icons-material/People";
 import SportsEsportsIcon from "@mui/icons-material/SportsEsports";
 import UsuariosView from "../../components/usuariosView";
+import MatchesTable from "../../components/matchesTable";
 
 const drawerWidth = 220;
 
@@ -145,9 +146,7 @@ export default function AdminPanel() {
           <Typography variant="h4">{sections[0].label}</Typography>
         )}
         {active === "usuarios" && <UsuariosView />}
-        {active === "partidas" && (
-          <Typography variant="h4">{sections[2].label}</Typography>
-        )}
+        {active === "partidas" && <MatchesTable />}
       </Box>
     </Box>
   );

@@ -15,33 +15,23 @@ datasource db {
 }
 
 model Player {
-  id    Int    @id @default(autoincrement())
-  name  String
-  matches Match[] @relation("MatchPlayers")
-  wins    Winner[]
+  id             Int             @id @default(autoincrement())
+  name           String
+  participations Participation[]
 }
 
 model Match {
-  id        Int       @id @default(autoincrement())
-  createdAt DateTime  @default(now())
-  players   Player[]  @relation("MatchPlayers") // jugadores que participan
-  winners   Winner[]  // uno o varios ganadores
+  id             Int             @id @default(autoincrement())
+  createdAt      DateTime        @default(now())
+  participations Participation[]
 }
 
-model Deck {
-  id        Int    @id @default(autoincrement())
+model Participation {
+  id        Int     @id @default(autoincrement())
+  player    Player  @relation(fields: [playerId], references: [id])
+  playerId  Int
+  match     Match   @relation(fields: [matchId], references: [id])
+  matchId   Int
   commander String
-  winners   Winner[]
+  winner    Boolean @default(false) // true si ganó, false si no
 }
-
-model Winner {
-  id       Int    @id @default(autoincrement())
-  player   Player @relation(fields: [playerId], references: [id])
-  playerId Int
-  deck     Deck   @relation(fields: [deckId], references: [id])
-  deckId   Int
-  match    Match  @relation(fields: [matchId], references: [id])
-  matchId  Int
-}
-
-
