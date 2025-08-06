@@ -1,7 +1,7 @@
 import React from "react";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
-import Main from "../main/main";
-import RegisterMatch from "../registerMatch/RegisterMatch";
+import Main from "./pages/main/Main";
+import RegisterMatch from "./pages/registerMatch/RegisterMatch";
 
 export default function App() {
   return (
