@@ -1,7 +1,19 @@
-import React, { useState, useContext, FormEvent } from "react";
-import { TextField, Button, Box, Typography, Alert } from "@mui/material";
+import {
+  Container,
+  CssBaseline,
+  Box,
+  Avatar,
+  Typography,
+  Alert,
+  TextField,
+  Button,
+  Grid,
+} from "@mui/material";
+import Paper from "@mui/material/Paper";
+import { useState, FormEvent } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "../../contexts/AuthContext";
+import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
 
 export default function AdminLogin() {
   const { login } = useAuth();
@@ -23,40 +35,80 @@ export default function AdminLogin() {
   };
 
   return (
-    <Box
-      sx={{
-        maxWidth: 400,
-        mx: "auto",
-        mt: 10,
-        p: 3,
-        border: "1px solid #ccc",
-        borderRadius: 2,
-      }}
-    >
-      <Typography variant="h5" mb={2}>
-        Login Admin
-      </Typography>
-      {error && <Alert severity="error">{error}</Alert>}
-      <form onSubmit={handleSubmit}>
-        <TextField
-          label="Usuario"
-          fullWidth
-          margin="normal"
-          value={username}
-          onChange={(e) => setUsername(e.target.value)}
-        />
-        <TextField
-          label="Contraseña"
-          type="password"
-          fullWidth
-          margin="normal"
-          value={password}
-          onChange={(e) => setPassword(e.target.value)}
-        />
-        <Button type="submit" variant="contained" fullWidth sx={{ mt: 2 }}>
-          Entrar
-        </Button>
-      </form>
-    </Box>
+    <Container component="main" maxWidth="xs">
+      <CssBaseline />
+      <Paper elevation={6} sx={{ p: 3, mt: 8, borderRadius: 3 }}>
+        <Box
+          sx={{
+            display: "flex",
+            flexDirection: "column",
+            alignItems: "center",
+          }}
+        >
+          {/* Icono arriba */}
+          <Avatar sx={{ m: 1, bgcolor: "secondary.main" }}>
+            <LockOutlinedIcon />
+          </Avatar>
+
+          {/* Título */}
+          <Typography component="h1" variant="h5">
+            Panel de Administración
+          </Typography>
+
+          {/* Formulario */}
+          <Box
+            component="form"
+            onSubmit={handleSubmit}
+            noValidate
+            sx={{ mt: 1, width: "100%" }}
+          >
+            {error && <Alert severity="error">{error}</Alert>}
+
+            <TextField
+              margin="normal"
+              required
+              fullWidth
+              id="username"
+              label="Usuario"
+              name="username"
+              autoComplete="off" // 🔧 evita warnings de autocompletado
+              value={username}
+              onChange={(e) => setUsername(e.target.value)}
+            />
+
+            <TextField
+              margin="normal"
+              required
+              fullWidth
+              name="password"
+              label="Contraseña"
+              type="password"
+              id="password"
+              autoComplete="new-password" // 🔧 evita warnings de current-password
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+            />
+
+            {/* Botones lado a lado */}
+            <Grid container spacing={2} sx={{ mt: 3 }}>
+              <Grid item xs={6}>
+                <Button
+                  fullWidth
+                  variant="outlined"
+                  onClick={() => navigate("/")}
+                >
+                  Volver
+                </Button>
+              </Grid>
+              <Grid item xs={6}>
+                <Button type="submit" fullWidth variant="contained">
+                  Entrar
+                </Button>
+              </Grid>
+            </Grid>
+          </Box>
+        </Box>
+      </Paper>
+    </Container>
   );
 }
