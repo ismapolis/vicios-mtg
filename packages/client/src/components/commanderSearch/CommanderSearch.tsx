@@ -76,7 +76,7 @@ export default function CommanderSearch({
       renderInput={(params) => (
         <TextField
           {...params}
-          placeholder="Search commander"
+          placeholder="Commander"
           InputProps={{
             ...params.InputProps,
             endAdornment: (

@@ -6,11 +6,18 @@ import {
   Paper,
   IconButton,
   Button,
+  AppBar,
+  Toolbar,
+  Fab,
 } from "@mui/material";
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
+import AddIcon from "@mui/icons-material/Add";
+import RemoveIcon from "@mui/icons-material/Remove";
 import PlayerRow from "../../components/playerRow";
 import { useNavigate } from "react-router-dom";
 import { CACHE_KEY } from "../../components/commanderSearch/CommanderSearch";
+import { App_Name } from "@my-app/common";
+import EmojiEventsIcon from "@mui/icons-material/EmojiEvents";
 
 interface PlayerData {
   name: string;
@@ -57,33 +64,52 @@ export default function RegisterMatch() {
     // Aquí lógica para guardar partida
   };
 
+  const handleAddPlayer = () => {
+    setPlayers([...players, { name: "", commander: "", winner: false }]);
+  };
+
+  const handleRemovePlayer = () => {
+    if (players.length > 1) {
+      setPlayers(players.slice(0, -1));
+    }
+  };
+
   return (
     <Container maxWidth="sm" sx={{ mt: 3 }}>
-      <Paper elevation={3} sx={{ p: 2 }}>
-        {/* Header */}
-        <Grid container alignItems="center" sx={{ mb: 2 }}>
-          <Grid item xs={1}>
-            <IconButton onClick={handleCancel}>
-              <ArrowBackIcon />
-            </IconButton>
-          </Grid>
-          <Grid item xs={11}>
-            <Typography variant="h6" gutterBottom align="center">
-              Register Match
-            </Typography>
-          </Grid>
-        </Grid>
+      {/* Header bar */}
+      <AppBar position="static" sx={{ borderRadius: 2, mb: 2 }}>
+        <Toolbar>
+          <IconButton edge="start" color="inherit" onClick={handleCancel}>
+            <ArrowBackIcon />
+          </IconButton>
+          <Typography variant="h5" sx={{ flexGrow: 1, textAlign: "center" }}>
+            {App_Name}
+          </Typography>
+          <div style={{ width: 48 }} />
+        </Toolbar>
+      </AppBar>
 
+      {/* Formulario */}
+      <Paper elevation={3} sx={{ p: 2 }}>
         {/* Column titles */}
         <Grid container spacing={2} alignItems="center">
           <Grid item xs={5}>
-            <Typography variant="subtitle2">Player</Typography>
+            <Typography variant="h6">Player</Typography>
           </Grid>
           <Grid item xs={5}>
-            <Typography variant="subtitle2">Commander</Typography>
+            <Typography variant="h6">Commander</Typography>
           </Grid>
-          <Grid item xs={2} textAlign="center">
-            <Typography variant="subtitle2">Winner</Typography>
+          <Grid
+            item
+            xs={2}
+            textAlign="center"
+            sx={{
+              display: "flex",
+              justifyContent: "center",
+              alignItems: "center",
+            }}
+          >
+            <EmojiEventsIcon color="primary" sx={{ fontSize: 30 }} />
           </Grid>
         </Grid>
 
@@ -100,13 +126,38 @@ export default function RegisterMatch() {
             }}
             winner={p.winner}
             onWinnerChange={(val) => updatePlayer(i, "winner", val)}
-            recent={recentCommanders} // 🔑 se pasa a PlayerRow
-            onRecentUpdate={handleUpdateRecents} // 🔑 también se pasa
+            recent={recentCommanders}
+            onRecentUpdate={handleUpdateRecents}
           />
         ))}
 
+        {/* Botones añadir / quitar jugador */}
+        <Grid container spacing={1} justifyContent="flex-start" sx={{ mt: 2 }}>
+          <Grid item>
+            <Fab
+              color="error"
+              size="small"
+              aria-label="remove player"
+              onClick={handleRemovePlayer}
+              disabled={players.length <= 1}
+            >
+              <RemoveIcon />
+            </Fab>
+          </Grid>
+          <Grid item>
+            <Fab
+              color="secondary"
+              size="small"
+              aria-label="add player"
+              onClick={handleAddPlayer}
+            >
+              <AddIcon />
+            </Fab>
+          </Grid>
+        </Grid>
+
         {/* Register button */}
-        <Grid container justifyContent="flex-start" sx={{ mt: 2 }}>
+        <Grid container justifyContent="flex-start" sx={{ mt: 3 }}>
           <Button variant="contained" color="primary" onClick={handleRegister}>
             Registrar partida
           </Button>
