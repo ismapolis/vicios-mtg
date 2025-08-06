@@ -1,7 +1,8 @@
 import React, { useState } from "react";
-import { Grid, Fab } from "@material-ui/core";
-import { CloudDownloadRounded } from "@material-ui/icons";
+import { Grid, Fab } from "@mui/material";
+import CloudDownloadRoundedIcon from "@mui/icons-material/CloudDownloadRounded";
 import { useNavigate } from "react-router-dom";
+import { App_Name } from "@my-app/common";
 
 export default function Main() {
   const [apiResponse, setApiResponse] = useState("");
@@ -37,10 +38,10 @@ export default function Main() {
           </Fab>
         </Grid>
 
-        <Grid item>{`Client App Name - Vicios MTG`}</Grid>
+        <Grid item>{`Client App Name - ${App_Name}`}</Grid>
         <Grid item>
           <Fab variant="extended" color="primary" onClick={onCallApi}>
-            <CloudDownloadRounded className="icon" />
+            <CloudDownloadRoundedIcon className="icon" />
             Call API
           </Fab>
         </Grid>
