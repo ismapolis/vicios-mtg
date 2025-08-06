@@ -82,7 +82,10 @@ export default function RegisterMatch() {
           <IconButton edge="start" color="inherit" onClick={handleCancel}>
             <ArrowBackIcon />
           </IconButton>
-          <Typography variant="h5" sx={{ flexGrow: 1, textAlign: "center" }}>
+          <Typography
+            variant="h5"
+            sx={{ flexGrow: 1, textAlign: "center", color: "primary" }}
+          >
             {App_Name}
           </Typography>
           <div style={{ width: 48 }} />

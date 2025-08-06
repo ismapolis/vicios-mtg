@@ -1,51 +1,82 @@
-import React, { useState } from "react";
-import { Grid, Fab } from "@mui/material";
-import CloudDownloadRoundedIcon from "@mui/icons-material/CloudDownloadRounded";
+import React from "react";
+import { Grid, Typography, Fab, Paper, Box } from "@mui/material";
+import SportsEsportsIcon from "@mui/icons-material/SportsEsports";
 import { useNavigate } from "react-router-dom";
 import { App_Name } from "@my-app/common";
 
 export default function Main() {
-  const [apiResponse, setApiResponse] = useState("");
   const navigate = useNavigate();
 
-  const onCallApi = async () => {
-    try {
-      const response = await fetch("/api", { method: "GET" });
-      const text = await response.text();
-      setApiResponse(text);
-    } catch (error) {
-      console.error(error);
-    }
-  };
-
   return (
-    <div className="App">
+    <div className="App" style={{ position: "relative" }}>
+      {/* Logo Magic arriba derecha */}
+      <Box
+        component="img"
+        src="/images/Magic-The-Gathering-Logo-1993.png"
+        alt="Magic The Gathering Logo"
+        sx={{
+          position: "absolute",
+          top: 32,
+          right: 32,
+          width: 120,
+          userSelect: "none",
+          pointerEvents: "none",
+        }}
+      />
+
       <Grid
         container
-        spacing={2}
         direction="column"
-        justifyContent="flex-start"
+        justifyContent="center"
         alignItems="center"
+        spacing={4}
+        sx={{ minHeight: "100vh", backgroundColor: "background.default" }}
       >
-        <Grid item style={{ alignSelf: "flex-start" }}>
-          <Fab
-            size="small"
-            color="secondary"
-            onClick={() => navigate("/register-match")}
-            aria-label="register match"
+        {/* Título de la app */}
+        <Grid item>
+          <Typography
+            variant="h2"
+            component="h1"
+            color="primary"
+            sx={{ fontWeight: "bold" }}
           >
-            +
-          </Fab>
+            {App_Name}
+          </Typography>
         </Grid>
 
-        <Grid item>{`Client App Name - ${App_Name}`}</Grid>
+        {/* Botón principal */}
         <Grid item>
-          <Fab variant="extended" color="primary" onClick={onCallApi}>
-            <CloudDownloadRoundedIcon className="icon" />
-            Call API
-          </Fab>
+          <Paper
+            elevation={6}
+            sx={{
+              p: 4,
+              borderRadius: 4,
+              textAlign: "center",
+              backgroundColor: "background.paper",
+            }}
+          >
+            <Fab
+              variant="extended"
+              color="secondary"
+              onClick={() => navigate("/register-match")}
+              aria-label="register match"
+              sx={{ px: 4, py: 2, fontSize: "1.1rem" }}
+            >
+              <SportsEsportsIcon sx={{ mr: 1 }} />
+              Registrar Partida
+            </Fab>
+          </Paper>
         </Grid>
-        {apiResponse && <Grid item>{`Server Response - ${apiResponse}`}</Grid>}
+
+        {/* Imagen de colores Magic */}
+        <Grid item>
+          <Box
+            component="img"
+            src="/images/colors.png"
+            alt="Magic Colors Wheel"
+            sx={{ width: 240, userSelect: "none", pointerEvents: "none" }}
+          />
+        </Grid>
       </Grid>
     </div>
   );
