@@ -1,26 +1,35 @@
-import express from 'express';
-import cors from 'cors';
-import { join } from 'path';
+import express from "express";
+import cors from "cors";
+import { join } from "path";
 
-import { App_Name } from '@my-app/common';
-const clientPath = '../../client/build';
+import playersRouter from "./routes/players";
+
+import { App_Name } from "@my-app/common";
+
+const clientPath = "../../client/build";
 const app = express();
-app.use(cors());
-const port = 8080; // default port to listen
+const port = 8080;
 
-// Serve static resources from the "public" folder (ex: when there are images to display)
+app.use(cors());
+app.use(express.json()); // Para poder leer JSON en body
+
+// Sirve archivos estáticos
 app.use(express.static(join(__dirname, clientPath)));
 
-app.get('/api', (req, res) => {
-    res.send(`Hello ${App_Name}, From server`);
+// API básica
+app.get("/api", (req, res) => {
+  res.send(`Hello ${App_Name}, From server`);
 });
 
-// Serve the HTML page
-app.get('*', (req: any, res: any) => {
-    res.sendFile(join(__dirname, clientPath, 'index.html'));
+// Usa el router modular para /api/players
+app.use("/api/players", playersRouter);
+
+// Ruta catch-all para servir index.html (React SPA)
+app.get("*", (req, res) => {
+  res.sendFile(join(__dirname, clientPath, "index.html"));
 });
 
-// start the Express server
+// Levanta servidor
 app.listen(port, () => {
-    console.log(`app ${App_Name} started at http://localhost:${port}` );
+  console.log(`app ${App_Name} started at http://localhost:${port}`);
 });

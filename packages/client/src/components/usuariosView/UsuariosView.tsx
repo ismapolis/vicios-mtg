@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import {
   Typography,
   List,
@@ -9,6 +9,7 @@ import {
   Paper,
   IconButton,
   TextField,
+  CircularProgress,
 } from "@mui/material";
 
 import EditIcon from "@mui/icons-material/Edit";
@@ -16,30 +17,65 @@ import DeleteIcon from "@mui/icons-material/Delete";
 import CheckIcon from "@mui/icons-material/Check";
 import CloseIcon from "@mui/icons-material/Close";
 
+interface Usuario {
+  id: number;
+  nombre: string;
+}
+
 export default function UsuariosView() {
-  const [usuarios, setUsuarios] = useState([
-    { id: 1, nombre: "Alice" },
-    { id: 2, nombre: "Bob" },
-    { id: 3, nombre: "Charlie" },
-  ]);
+  const [usuarios, setUsuarios] = useState<Usuario[]>([]);
+  const [loading, setLoading] = useState(false);
 
   const [editId, setEditId] = useState<number | null>(null);
   const [editNombre, setEditNombre] = useState("");
 
-  const handleAddUser = () => {
-    const nuevo = {
-      id: usuarios.length + 1,
-      nombre: `Usuario ${usuarios.length + 1}`,
-    };
-    setUsuarios([...usuarios, nuevo]);
+  // Cargar usuarios al montar
+  useEffect(() => {
+    fetchUsuarios();
+  }, []);
+
+  const fetchUsuarios = async () => {
+    setLoading(true);
+    try {
+      const res = await fetch("/api/players");
+      const data = await res.json();
+      // Mapea player.name a usuario.nombre para mantener consistencia
+      const mapped = data.map((u: any) => ({ id: u.id, nombre: u.name }));
+      setUsuarios(mapped);
+    } catch (error) {
+      console.error("Error cargando usuarios", error);
+    }
+    setLoading(false);
   };
 
-  const handleDeleteUser = (id: number) => {
+  const handleAddUser = async () => {
+    try {
+      const res = await fetch("/api/players", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ name: `Usuario ${usuarios.length + 1}` }),
+      });
+      if (!res.ok) throw new Error("Error al añadir usuario");
+      await fetchUsuarios();
+    } catch (error) {
+      alert("Error añadiendo usuario");
+    }
+  };
+
+  const handleDeleteUser = async (id: number) => {
     const confirmDelete = window.confirm(
       "¿Estás seguro que quieres borrar este usuario?"
     );
-    if (confirmDelete) {
-      setUsuarios(usuarios.filter((u) => u.id !== id));
+    if (!confirmDelete) return;
+
+    try {
+      const res = await fetch(`/api/players/${id}`, {
+        method: "DELETE",
+      });
+      if (!res.ok) throw new Error("Error al borrar usuario");
+      await fetchUsuarios();
+    } catch (error) {
+      alert("Error borrando usuario");
     }
   };
 
@@ -53,13 +89,29 @@ export default function UsuariosView() {
     setEditNombre("");
   };
 
-  const handleEditSave = (id: number) => {
-    setUsuarios(
-      usuarios.map((u) => (u.id === id ? { ...u, nombre: editNombre } : u))
-    );
-    setEditId(null);
-    setEditNombre("");
+  const handleEditSave = async (id: number) => {
+    try {
+      const res = await fetch(`/api/players/${id}`, {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ name: editNombre }),
+      });
+      if (!res.ok) throw new Error("Error al guardar usuario");
+      await fetchUsuarios();
+      setEditId(null);
+      setEditNombre("");
+    } catch (error) {
+      alert("Error guardando usuario");
+    }
   };
+
+  if (loading) {
+    return (
+      <Box textAlign="center" mt={5}>
+        <CircularProgress />
+      </Box>
+    );
+  }
 
   return (
     <Box>
