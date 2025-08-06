@@ -1,1 +1,1 @@
-export const App_Name = "My Cool Webapp";
+export const App_Name = "Vicios MTG";
