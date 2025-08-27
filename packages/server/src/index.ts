@@ -5,12 +5,17 @@ import playersRouter from "./routes/players";
 import matchesRouter from "./routes/matches";
 
 import { App_Name } from "@vicios-mtg/common";
+import { testPrisma } from "./testPrisma";
+
+(async () => {
+  await testPrisma();
+})();
 
 const app = express();
 
 // Puerto configurable vía variables de entorno
 const port = process.env.PORT ? parseInt(process.env.PORT) : 4000;
-const nodeEnv = process.env.NODE_ENV || "none";
+const nodeEnv = process.env.NODE_ENV || "development";
 
 app.use(cors());
 app.use(express.json());

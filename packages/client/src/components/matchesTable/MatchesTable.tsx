@@ -1,9 +1,31 @@
 import React, { useEffect, useState } from "react";
-import { Paper, Typography, Box } from "@mui/material";
+import {
+  Box,
+  Typography,
+  Paper,
+  List,
+  ListItem,
+  ListItemText,
+  CircularProgress,
+  Divider,
+} from "@mui/material";
 import { fetchMatchesApi } from "../../hooks/useMatchesApi";
 
+interface Participation {
+  player?: { name: string };
+  playerName?: string;
+  commander: string;
+  isWinner: boolean;
+}
+
+interface Match {
+  id: number;
+  createdAt: string;
+  participations: Participation[];
+}
+
 export default function MatchesTable() {
-  const [matches, setMatches] = useState<any[]>([]);
+  const [matches, setMatches] = useState<Match[]>([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -15,116 +37,71 @@ export default function MatchesTable() {
     fetchData();
   }, []);
 
+  if (loading) {
+    return (
+      <Box textAlign="center" mt={5}>
+        <CircularProgress />
+      </Box>
+    );
+  }
+
   return (
-    <Box sx={{ maxWidth: 800, margin: "auto", mt: 3 }}>
-      <Typography variant="h5" sx={{ mb: 2, fontWeight: "bold" }}>
+    <Box>
+      <Typography variant="h4" gutterBottom>
         Lista de Partidas
       </Typography>
-      <Box
-        sx={{
-          display: "flex",
-          fontWeight: "bold",
-          px: 0,
-          py: 1,
-        }}
-      >
-        <Box
-          sx={{
-            flex: 1,
-            pl: 2,
-            pr: 1,
-            py: "8px",
-            display: "flex",
-            alignItems: "center",
-          }}
-        >
-          Match ID
-        </Box>
-        <Box
-          sx={{
-            flex: 1,
-            px: 1,
-            py: "8px",
-            display: "flex",
-            alignItems: "center",
-          }}
-        >
-          Date
-        </Box>
-        <Box
-          sx={{
-            flex: 3,
-            pl: 1,
-            pr: 2,
-            py: "8px",
-            display: "flex",
-            alignItems: "center",
-          }}
-        >
-          Players (Commander - Win)
-        </Box>
-      </Box>
-      <Paper
-        elevation={3}
-        sx={{
-          borderRadius: 2,
-          p: 0,
-          maxWidth: 800,
-          margin: "auto",
-        }}
-      >
-        <table
-          style={{
-            borderCollapse: "collapse",
-            width: "100%",
-            textAlign: "left",
-          }}
-        >
-          <tbody>
-            {loading ? (
-              <tr>
-                <td
-                  colSpan={3}
-                  style={{ textAlign: "center", padding: "16px" }}
+
+      <Paper elevation={4} sx={{ borderRadius: 3, overflow: "hidden" }}>
+        {matches.length === 0 ? (
+          <Box textAlign="center" py={3}>
+            <Typography variant="body1" sx={{ fontSize: 18 }}>
+              No hay partidas registradas.
+            </Typography>
+          </Box>
+        ) : (
+          <List disablePadding>
+            {matches.map((match, index) => (
+              <React.Fragment key={match.id}>
+                <ListItem
+                  sx={{
+                    display: "flex",
+                    flexDirection: "column",
+                    alignItems: "flex-start",
+                    px: 3,
+                    py: 2,
+                  }}
                 >
-                  Cargando partidas...
-                </td>
-              </tr>
-            ) : matches.length === 0 ? (
-              <tr>
-                <td
-                  colSpan={3}
-                  style={{ textAlign: "center", padding: "16px" }}
-                >
-                  No hay partidas registradas.
-                </td>
-              </tr>
-            ) : (
-              matches.map((match) => (
-                <tr key={match.id} style={{ borderBottom: "1px solid #ccc" }}>
-                  <td style={{ padding: "8px 8px 8px 16px", width: "16%" }}>
-                    {match.id}
-                  </td>
-                  <td style={{ padding: "8px", width: "16%" }}>
-                    {new Date(match.createdAt).toLocaleDateString()}
-                  </td>
-                  <td style={{ padding: "8px 16px 8px 8px", width: "68%" }}>
-                    <ul
-                      style={{ paddingLeft: 0, listStyle: "none", margin: 0 }}
+                  <Box sx={{ width: "100%", display: "flex", mb: 1 }}>
+                    <Typography
+                      variant="body1"
+                      sx={{ fontSize: 18, fontWeight: "bold", flex: 1 }}
                     >
-                      {match.participations.map((p: any, idx: number) => (
-                        <li key={idx}>
-                          {p.player?.name ?? p.playerName} - {p.commander}{" "}
-                          {p.isWinner ? "- 🏆 Winner" : ""}
-                        </li>
-                      ))}
-                    </ul>
-                  </td>
-                </tr>
-              ))
-            )}
-          </tbody>
-        </table>
+                      ID: {match.id}
+                    </Typography>
+                    <Typography
+                      variant="body2"
+                      sx={{ fontSize: 16, color: "text.secondary" }}
+                    >
+                      {new Date(match.createdAt).toLocaleDateString()}
+                    </Typography>
+                  </Box>
+                  <List disablePadding sx={{ pl: 1 }}>
+                    {match.participations.map((p, idx) => (
+                      <ListItemText
+                        key={idx}
+                        primaryTypographyProps={{ fontSize: 18 }}
+                        primary={`${p.player?.name ?? p.playerName} - ${
+                          p.commander
+                        } ${p.isWinner ? "🏆 Winner" : ""}`}
+                      />
+                    ))}
+                  </List>
+                </ListItem>
+                {index < matches.length - 1 && <Divider />}
+              </React.Fragment>
+            ))}
+          </List>
+        )}
       </Paper>
     </Box>
   );

@@ -71,7 +71,7 @@ export default function AdminLogin() {
               id="username"
               label="Usuario"
               name="username"
-              autoComplete="off" // 🔧 evita warnings de autocompletado
+              autoComplete="off" // evita warnings de autocompletado
               value={username}
               onChange={(e) => setUsername(e.target.value)}
             />
@@ -84,7 +84,7 @@ export default function AdminLogin() {
               label="Contraseña"
               type="password"
               id="password"
-              autoComplete="new-password" // 🔧 evita warnings de current-password
+              autoComplete="new-password" // evita warnings de current-password
               value={password}
               onChange={(e) => setPassword(e.target.value)}
             />
