@@ -9,6 +9,7 @@ import {
 } from "@mui/material";
 import CommanderSearch from "../commanderSearch";
 import { useEffect, useState } from "react";
+import { fetchUsers } from "../../hooks/fetchUsers";
 
 interface PlayerRowProps {
   winner: boolean;
@@ -36,9 +37,9 @@ export default function PlayerRow({
   useEffect(() => {
     const fetchPlayers = async () => {
       try {
-        const res = await fetch("/api/players");
-        const data = await res.json();
-        setPlayers(data);
+        const res = await fetchUsers();
+        const users = res.map((u, index) => ({ id: index, name: u.nombre }));
+        setPlayers(users);
       } catch (error) {
         setPlayers([]);
       }

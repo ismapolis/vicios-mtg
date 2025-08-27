@@ -17,6 +17,7 @@ import DeleteIcon from "@mui/icons-material/Delete";
 import CheckIcon from "@mui/icons-material/Check";
 import CloseIcon from "@mui/icons-material/Close";
 import { fetchUsers } from "../../hooks/fetchUsers";
+import { addUser } from "../../hooks/useAddUser";
 
 interface Usuario {
   id: number;
@@ -44,12 +45,7 @@ export default function UsuariosView() {
 
   const handleAddUser = async () => {
     try {
-      const res = await fetch("/api/players", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ name: `Usuario ${usuarios.length + 1}` }),
-      });
-      if (!res.ok) throw new Error("Error al añadir usuario");
+      await addUser(`Usuario ${usuarios.length + 1}`);
       await fetchUsuarios();
     } catch (error) {
       alert("Error añadiendo usuario");
