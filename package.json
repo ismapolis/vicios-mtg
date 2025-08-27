@@ -1,5 +1,5 @@
 {
-  "name": "express-react-app",
+  "name": "vicios-mtg",
   "version": "1.0.0",
   "main": "index.js",
   "license": "MIT",
@@ -11,9 +11,9 @@
     "lerna": "^4.0.0"
   },
   "scripts": {
-    "client": "yarn workspace @my-app/client",
-    "common": "yarn workspace @my-app/common",
-    "server": "yarn workspace @my-app/server",
+    "client": "yarn workspace @vicios-mtg/client",
+    "common": "yarn workspace @vicios-mtg/common",
+    "server": "yarn workspace @vicios-mtg/server",
     "dev": "yarn common build & yarn client dev & yarn server dev --verbose",
     "start": "yarn server start"
   }

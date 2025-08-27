@@ -2,7 +2,7 @@ import React from "react";
 import { Grid, Typography, Fab, Paper, Box, Button } from "@mui/material";
 import SportsEsportsIcon from "@mui/icons-material/SportsEsports";
 import { useNavigate } from "react-router-dom";
-import { App_Name } from "@my-app/common";
+import { App_Name } from "vicios-mtg/common";
 
 export default function Main() {
   const navigate = useNavigate();

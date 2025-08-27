@@ -16,10 +16,12 @@ import RemoveIcon from "@mui/icons-material/Remove";
 import PlayerRow from "../../components/playerRow";
 import { useNavigate } from "react-router-dom";
 import { CACHE_KEY } from "../../components/commanderSearch/CommanderSearch";
-import { App_Name } from "@my-app/common";
+import { App_Name } from "vicios-mtg/common";
 import EmojiEventsIcon from "@mui/icons-material/EmojiEvents";
+import { registerMatch } from "../../hooks/useRegisterMatch";
+import { validateMatch } from "../../utils/validateMatch";
 
-interface PlayerData {
+export interface PlayerData {
   name: string;
   commander: string;
   winner: boolean;
@@ -59,9 +61,21 @@ export default function RegisterMatch() {
     navigate(-1);
   };
 
-  const handleRegister = () => {
-    console.log("Datos de la partida:", players);
-    // Aquí lógica para guardar partida
+  const handleRegister = async () => {
+    const errorMsg = validateMatch(players);
+    if (errorMsg) {
+      alert(errorMsg);
+      return;
+    }
+
+    // Si pasa la validación, registrar partida
+    try {
+      await registerMatch(players);
+      alert("Partida registrada correctamente");
+      navigate(-1);
+    } catch (error: any) {
+      alert(error.message);
+    }
   };
 
   const handleAddPlayer = () => {

@@ -1,5 +1,14 @@
-import { Grid, Checkbox, TextField } from "@mui/material";
+import {
+  Grid,
+  Checkbox,
+  TextField,
+  Select,
+  MenuItem,
+  FormControl,
+  InputLabel,
+} from "@mui/material";
 import CommanderSearch from "../commanderSearch";
+import { useEffect, useState } from "react";
 
 interface PlayerRowProps {
   winner: boolean;
@@ -8,8 +17,8 @@ interface PlayerRowProps {
   onPlayerChange: (val: string) => void;
   commander: string;
   onCommanderChange: (val: string) => void;
-  recent: string[]; // 🔑 se agregan
-  onRecentUpdate: (val: string) => void; // 🔑 se agregan
+  recent: string[];
+  onRecentUpdate: (val: string) => void;
 }
 
 export default function PlayerRow({
@@ -22,24 +31,46 @@ export default function PlayerRow({
   recent,
   onRecentUpdate,
 }: PlayerRowProps) {
+  const [players, setPlayers] = useState<{ id: number; name: string }[]>([]);
+
+  useEffect(() => {
+    const fetchPlayers = async () => {
+      try {
+        const res = await fetch("/api/players");
+        const data = await res.json();
+        setPlayers(data);
+      } catch (error) {
+        setPlayers([]);
+      }
+    };
+    fetchPlayers();
+  }, []);
+
   return (
     <Grid container spacing={1} alignItems="center" sx={{ mt: 1 }}>
       <Grid item xs={4}>
-        <TextField
-          fullWidth
-          size="small"
-          label="Player"
-          value={player}
-          onChange={(e) => onPlayerChange(e.target.value)}
-          inputProps={{ maxLength: 10 }}
-        />
+        <FormControl fullWidth size="small">
+          <InputLabel id="player-select-label">Player</InputLabel>
+          <Select
+            labelId="player-select-label"
+            value={player}
+            label="Player"
+            onChange={(e) => onPlayerChange(e.target.value)}
+          >
+            {players.map((p) => (
+              <MenuItem key={p.id} value={p.name}>
+                {p.name}
+              </MenuItem>
+            ))}
+          </Select>
+        </FormControl>
       </Grid>
       <Grid item xs={6}>
         <CommanderSearch
           value={commander}
           onChange={onCommanderChange}
-          recent={recent} // 🔑 pasa al componente
-          onRecentUpdate={onRecentUpdate} // 🔑 también pasa
+          recent={recent}
+          onRecentUpdate={onRecentUpdate}
         />
       </Grid>
       <Grid
@@ -53,7 +84,7 @@ export default function PlayerRow({
       >
         <Checkbox
           sx={{
-            transform: "scale(1.25)", // escala el checkbox al 150%
+            transform: "scale(1.25)",
             paddingLeft: 2,
           }}
           size="medium"

@@ -1,30 +1,29 @@
 {
   "compilerOptions": {
     "module": "es2015",
-		"target": "es2015",
-		"moduleResolution": "node",
-		"emitDecoratorMetadata": true,
-		"experimentalDecorators": true,
-		"esModuleInterop": true,
-		"allowSyntheticDefaultImports": true,
-		"preserveConstEnums": true,
-		"sourceMap": true,
-		"skipLibCheck": true,
-		"resolveJsonModule": true,
-		"allowJs": true,
-		"isolatedModules": true,
-    "lib": [
-      "dom",
-      "dom.iterable",
-      "esnext"
-    ],
+    "target": "es2015",
+    "moduleResolution": "node",
+    "emitDecoratorMetadata": true,
+    "experimentalDecorators": true,
+    "esModuleInterop": true,
+    "allowSyntheticDefaultImports": true,
+    "preserveConstEnums": true,
+    "sourceMap": true,
+    "skipLibCheck": true,
+    "resolveJsonModule": true,
+    "allowJs": true,
+    "isolatedModules": true,
+    "lib": ["dom", "dom.iterable", "esnext"],
     "forceConsistentCasingInFileNames": true,
     "noFallthroughCasesInSwitch": true,
     "noImplicitAny": false,
-    "strict": true
+    "strict": true,
+    "baseUrl": ".",
+    "paths": {
+      "vicios-mtg/common": ["packages/common/src"],
+      "vicios-mtg/server": ["packages/server/src"],
+      "vicios-mtg/client": ["packages/client/src"]
+    }
   },
-	"exclude": [
-    "node_modules",
-    "build"
-  ]
+  "exclude": ["node_modules", "build"]
 }

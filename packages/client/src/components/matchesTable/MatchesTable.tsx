@@ -1,27 +1,20 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { Paper, Typography, Box } from "@mui/material";
-
-const matchesMock = [
-  {
-    id: 1,
-    date: "2025-08-05",
-    participations: [
-      { playerName: "Alice", commander: "Azami, Lady of Scrolls", win: false },
-      { playerName: "Bob", commander: "Nicol Bolas", win: true },
-      { playerName: "Charlie", commander: "Edgar Markov", win: false },
-    ],
-  },
-  {
-    id: 2,
-    date: "2025-08-04",
-    participations: [
-      { playerName: "Dave", commander: "Atraxa, Praetors' Voice", win: true },
-      { playerName: "Eve", commander: "Chulane, Teller of Tales", win: false },
-    ],
-  },
-];
+import { fetchMatchesApi } from "../../hooks/fetchMatches";
 
 export default function MatchesTable() {
+  const [matches, setMatches] = useState<any[]>([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      const data = await fetchMatchesApi();
+      setMatches(data);
+      setLoading(false);
+    };
+    fetchData();
+  }, []);
+
   return (
     <Box sx={{ maxWidth: 800, margin: "auto", mt: 3 }}>
       <Typography variant="h5" sx={{ mb: 2, fontWeight: "bold" }}>
@@ -88,24 +81,48 @@ export default function MatchesTable() {
           }}
         >
           <tbody>
-            {matchesMock.map((match) => (
-              <tr key={match.id} style={{ borderBottom: "1px solid #ccc" }}>
-                <td style={{ padding: "8px 8px 8px 16px", width: "16%" }}>
-                  {match.id}
-                </td>
-                <td style={{ padding: "8px", width: "16%" }}>{match.date}</td>
-                <td style={{ padding: "8px 16px 8px 8px", width: "68%" }}>
-                  <ul style={{ paddingLeft: 0, listStyle: "none", margin: 0 }}>
-                    {match.participations.map((p, idx) => (
-                      <li key={idx}>
-                        {p.playerName} - {p.commander}{" "}
-                        {p.win ? "- 🏆 Winner" : ""}
-                      </li>
-                    ))}
-                  </ul>
+            {loading ? (
+              <tr>
+                <td
+                  colSpan={3}
+                  style={{ textAlign: "center", padding: "16px" }}
+                >
+                  Cargando partidas...
                 </td>
               </tr>
-            ))}
+            ) : matches.length === 0 ? (
+              <tr>
+                <td
+                  colSpan={3}
+                  style={{ textAlign: "center", padding: "16px" }}
+                >
+                  No hay partidas registradas.
+                </td>
+              </tr>
+            ) : (
+              matches.map((match) => (
+                <tr key={match.id} style={{ borderBottom: "1px solid #ccc" }}>
+                  <td style={{ padding: "8px 8px 8px 16px", width: "16%" }}>
+                    {match.id}
+                  </td>
+                  <td style={{ padding: "8px", width: "16%" }}>
+                    {new Date(match.createdAt).toLocaleDateString()}
+                  </td>
+                  <td style={{ padding: "8px 16px 8px 8px", width: "68%" }}>
+                    <ul
+                      style={{ paddingLeft: 0, listStyle: "none", margin: 0 }}
+                    >
+                      {match.participations.map((p: any, idx: number) => (
+                        <li key={idx}>
+                          {p.player?.name ?? p.playerName} - {p.commander}{" "}
+                          {p.isWinner ? "- 🏆 Winner" : ""}
+                        </li>
+                      ))}
+                    </ul>
+                  </td>
+                </tr>
+              ))
+            )}
           </tbody>
         </table>
       </Paper>

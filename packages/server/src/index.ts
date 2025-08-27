@@ -1,35 +1,32 @@
 import express from "express";
 import cors from "cors";
-import { join } from "path";
 
 import playersRouter from "./routes/players";
+import matchesRouter from "./routes/matches";
 
-import { App_Name } from "@my-app/common";
+import { App_Name } from "@vicios-mtg/common";
 
-const clientPath = "../../client/build";
 const app = express();
-const port = 8080;
+
+// Puerto configurable vía variables de entorno
+const port = process.env.PORT ? parseInt(process.env.PORT) : 4000;
+const nodeEnv = process.env.NODE_ENV || "none";
 
 app.use(cors());
-app.use(express.json()); // Para poder leer JSON en body
-
-// Sirve archivos estáticos
-app.use(express.static(join(__dirname, clientPath)));
+app.use(express.json());
 
 // API básica
-app.get("/api", (req, res) => {
-  res.send(`Hello ${App_Name}, From server`);
+app.get("/api", (_req, res) => {
+  res.send(`Hello ${App_Name}, From server [${nodeEnv}]`);
 });
 
-// Usa el router modular para /api/players
+// Rutas de la API
 app.use("/api/players", playersRouter);
-
-// Ruta catch-all para servir index.html (React SPA)
-app.get("*", (req, res) => {
-  res.sendFile(join(__dirname, clientPath, "index.html"));
-});
+app.use("/api/matches", matchesRouter);
 
 // Levanta servidor
 app.listen(port, () => {
-  console.log(`app ${App_Name} started at http://localhost:${port}`);
+  console.log(
+    `Server ${App_Name} running at http://localhost:${port} [${nodeEnv}]`
+  );
 });

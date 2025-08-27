@@ -9,8 +9,8 @@ interface CommanderOption {
 interface CommanderSearchProps {
   value: string;
   onChange: (value: string) => void;
-  recent: string[]; // 🔑 recibidos de RegisterMatch
-  onRecentUpdate: (val: string) => void; // 🔑 callback para actualizar
+  recent: string[]; // recibidos de RegisterMatch
+  onRecentUpdate: (val: string) => void; // callback para actualizar
 }
 
 export const CACHE_KEY = "recent-commanders";
@@ -26,9 +26,13 @@ export default function CommanderSearch({
   const [inputValue, setInputValue] = useState("");
 
   const handleSelect = (val: CommanderOption | null) => {
-    if (!val) return;
+    if (!val) {
+      onChange("");
+      setInputValue(""); // limpia inputValue
+      return;
+    }
     onChange(val.name);
-    onRecentUpdate(val.name); // 🔑 ya no guarda local, lo delega
+    onRecentUpdate(val.name);
   };
 
   const fetchAndSetCommanders = async (query: string) => {

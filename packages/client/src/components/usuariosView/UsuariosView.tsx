@@ -16,6 +16,7 @@ import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
 import CheckIcon from "@mui/icons-material/Check";
 import CloseIcon from "@mui/icons-material/Close";
+import { fetchUsers } from "../../hooks/fetchUsers";
 
 interface Usuario {
   id: number;
@@ -36,15 +37,8 @@ export default function UsuariosView() {
 
   const fetchUsuarios = async () => {
     setLoading(true);
-    try {
-      const res = await fetch("/api/players");
-      const data = await res.json();
-      // Mapea player.name a usuario.nombre para mantener consistencia
-      const mapped = data.map((u: any) => ({ id: u.id, nombre: u.name }));
-      setUsuarios(mapped);
-    } catch (error) {
-      console.error("Error cargando usuarios", error);
-    }
+    const mapped = await fetchUsers();
+    setUsuarios(mapped);
     setLoading(false);
   };
 
