@@ -18,8 +18,8 @@ import { useNavigate } from "react-router-dom";
 import { CACHE_KEY } from "../../components/commanderSearch/CommanderSearch";
 import { App_Name } from "vicios-mtg/common";
 import EmojiEventsIcon from "@mui/icons-material/EmojiEvents";
-import { registerMatch } from "../../hooks/useRegisterMatch";
 import { validateMatch } from "../../utils/validateMatch";
+import { registerMatch } from "../../hooks/useMatchesApi";
 
 export interface PlayerData {
   name: string;

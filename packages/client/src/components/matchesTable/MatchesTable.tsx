@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { Paper, Typography, Box } from "@mui/material";
-import { fetchMatchesApi } from "../../hooks/fetchMatches";
+import { fetchMatchesApi } from "../../hooks/useMatchesApi";
 
 export default function MatchesTable() {
   const [matches, setMatches] = useState<any[]>([]);

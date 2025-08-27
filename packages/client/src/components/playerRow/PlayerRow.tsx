@@ -9,7 +9,7 @@ import {
 } from "@mui/material";
 import CommanderSearch from "../commanderSearch";
 import { useEffect, useState } from "react";
-import { fetchUsers } from "../../hooks/fetchUsers";
+import { fetchUsers } from "../../hooks/useUsersApi";
 
 interface PlayerRowProps {
   winner: boolean;

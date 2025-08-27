@@ -16,8 +16,12 @@ import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
 import CheckIcon from "@mui/icons-material/Check";
 import CloseIcon from "@mui/icons-material/Close";
-import { fetchUsers } from "../../hooks/fetchUsers";
-import { addUser } from "../../hooks/useAddUser";
+import {
+  fetchUsers,
+  addUser,
+  deleteUser,
+  updateUser,
+} from "../../hooks/useUsersApi";
 
 interface Usuario {
   id: number;
@@ -59,10 +63,7 @@ export default function UsuariosView() {
     if (!confirmDelete) return;
 
     try {
-      const res = await fetch(`/api/players/${id}`, {
-        method: "DELETE",
-      });
-      if (!res.ok) throw new Error("Error al borrar usuario");
+      await deleteUser(id);
       await fetchUsuarios();
     } catch (error) {
       alert("Error borrando usuario");
@@ -81,12 +82,7 @@ export default function UsuariosView() {
 
   const handleEditSave = async (id: number) => {
     try {
-      const res = await fetch(`/api/players/${id}`, {
-        method: "PUT",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ name: editNombre }),
-      });
-      if (!res.ok) throw new Error("Error al guardar usuario");
+      await updateUser(id, editNombre);
       await fetchUsuarios();
       setEditId(null);
       setEditNombre("");
