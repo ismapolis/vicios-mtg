@@ -9,6 +9,7 @@ import {
   AppBar,
   Toolbar,
   Fab,
+  Divider,
 } from "@mui/material";
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import AddIcon from "@mui/icons-material/Add";
@@ -111,11 +112,9 @@ export default function RegisterMatch() {
         {/* Column titles */}
         <Grid container spacing={2} alignItems="center">
           <Grid item xs={5}>
-            <Typography variant="h6">Player</Typography>
+            <Typography variant="h6">Participantes</Typography>
           </Grid>
-          <Grid item xs={5}>
-            <Typography variant="h6">Commander</Typography>
-          </Grid>
+          <Grid item xs={5}></Grid>
           <Grid
             item
             xs={2}
@@ -132,20 +131,30 @@ export default function RegisterMatch() {
 
         {/* Rows */}
         {players.map((p, i) => (
-          <PlayerRow
-            key={i}
-            player={p.name}
-            onPlayerChange={(val) => updatePlayer(i, "name", val)}
-            commander={p.commander}
-            onCommanderChange={(val) => {
-              updatePlayer(i, "commander", val);
-              handleUpdateRecents(val);
-            }}
-            winner={p.winner}
-            onWinnerChange={(val) => updatePlayer(i, "winner", val)}
-            recent={recentCommanders}
-            onRecentUpdate={handleUpdateRecents}
-          />
+          <div key={i}>
+            <PlayerRow
+              player={p.name}
+              onPlayerChange={(val) => updatePlayer(i, "name", val)}
+              commander={p.commander}
+              onCommanderChange={(val) => {
+                updatePlayer(i, "commander", val);
+                handleUpdateRecents(val);
+              }}
+              winner={p.winner}
+              onWinnerChange={(val) => updatePlayer(i, "winner", val)}
+              recent={recentCommanders}
+              onRecentUpdate={handleUpdateRecents}
+            />
+            {i < players.length - 1 && (
+              <Divider
+                sx={{
+                  my: 1,
+                  borderBottomWidth: 2,
+                  borderColor: "primary.main",
+                }}
+              />
+            )}
+          </div>
         ))}
 
         {/* Botones añadir / quitar jugador */}

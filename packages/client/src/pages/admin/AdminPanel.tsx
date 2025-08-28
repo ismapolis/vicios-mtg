@@ -1,5 +1,6 @@
 // src/App.tsx
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import {
   AppBar,
   Toolbar,
@@ -21,12 +22,13 @@ import MenuIcon from "@mui/icons-material/Menu";
 import HomeIcon from "@mui/icons-material/Home";
 import PeopleIcon from "@mui/icons-material/People";
 import SportsEsportsIcon from "@mui/icons-material/SportsEsports";
+import ArrowBackIcon from "@mui/icons-material/ArrowBack";
+
 import UsuariosView from "../../components/usuariosView";
 import MatchesTable from "../../components/matchesTable";
 
 const drawerWidth = 220;
 
-// Definimos todas las secciones en un solo sitio
 const sections = [
   { key: "principal", label: "Principal", icon: <HomeIcon /> },
   { key: "usuarios", label: "Usuarios", icon: <PeopleIcon /> },
@@ -39,6 +41,7 @@ export default function AdminPanel() {
 
   const theme = useTheme();
   const isDesktop = useMediaQuery(theme.breakpoints.up("sm"));
+  const navigate = useNavigate();
 
   const handleDrawerToggle = () => {
     setMobileOpen(!mobileOpen);
@@ -46,18 +49,21 @@ export default function AdminPanel() {
 
   const handleMenuClick = (section: string) => {
     setActive(section);
-    if (!isDesktop) {
-      setMobileOpen(false); // cerrar en móvil
-    }
+    if (!isDesktop) setMobileOpen(false);
+  };
+
+  const handleBackToHome = () => {
+    navigate("/");
   };
 
   const drawer = (
-    <div>
+    <Box sx={{ display: "flex", flexDirection: "column", height: "100%" }}>
       <Toolbar>
         <Typography variant="h6" noWrap>
           Panel
         </Typography>
       </Toolbar>
+
       <List>
         {sections.map((section) => (
           <ListItem key={section.key} disablePadding>
@@ -71,14 +77,28 @@ export default function AdminPanel() {
           </ListItem>
         ))}
       </List>
-    </div>
+
+      {/* Espacio flexible para empujar el botón hacia abajo */}
+      <Box sx={{ flexGrow: 1 }} />
+
+      {/* Botón de salir */}
+      <List>
+        <ListItem disablePadding>
+          <ListItemButton onClick={handleBackToHome}>
+            <ListItemIcon>
+              <ArrowBackIcon />
+            </ListItemIcon>
+            <ListItemText primary="Salir" />
+          </ListItemButton>
+        </ListItem>
+      </List>
+    </Box>
   );
 
   return (
     <Box sx={{ display: "flex" }}>
       <CssBaseline />
 
-      {/* Top AppBar */}
       <AppBar
         position="fixed"
         sx={{ zIndex: (theme) => theme.zIndex.drawer + 1 }}
@@ -94,14 +114,13 @@ export default function AdminPanel() {
               <MenuIcon />
             </IconButton>
           )}
-          <Typography variant="h6" noWrap>
+          <Typography variant="h4" noWrap sx={{ color: "primary.main" }}>
             Dashboard
           </Typography>
         </Toolbar>
       </AppBar>
 
-      {/* Sidebar permanente en desktop */}
-      {isDesktop && (
+      {isDesktop ? (
         <Drawer
           variant="permanent"
           sx={{
@@ -115,10 +134,7 @@ export default function AdminPanel() {
         >
           {drawer}
         </Drawer>
-      )}
-
-      {/* Sidebar en móvil */}
-      {!isDesktop && (
+      ) : (
         <Drawer
           variant="temporary"
           open={mobileOpen}
@@ -133,15 +149,7 @@ export default function AdminPanel() {
         </Drawer>
       )}
 
-      {/* Contenido principal */}
-      <Box
-        component="main"
-        sx={{
-          flexGrow: 1,
-          p: 3,
-          mt: 8,
-        }}
-      >
+      <Box component="main" sx={{ flexGrow: 1, p: 3, mt: 8 }}>
         {active === "principal" && (
           <Typography variant="h4">{sections[0].label}</Typography>
         )}

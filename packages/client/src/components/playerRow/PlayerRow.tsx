@@ -6,6 +6,7 @@ import {
   MenuItem,
   FormControl,
   InputLabel,
+  Box,
 } from "@mui/material";
 import CommanderSearch from "../commanderSearch";
 import { useEffect, useState } from "react";
@@ -48,14 +49,12 @@ export default function PlayerRow({
   }, []);
 
   return (
-    <Grid container spacing={1} alignItems="center" sx={{ mt: 1 }}>
-      <Grid item xs={4}>
-        <FormControl fullWidth size="small">
-          <InputLabel id="player-select-label">Player</InputLabel>
+    <Grid container spacing={1} sx={{ mt: 1 }}>
+      {/* Player */}
+      <Grid item xs={12} sm={4}>
+        <FormControl fullWidth size="small" sx={{ maxWidth: 200 }}>
           <Select
-            labelId="player-select-label"
             value={player}
-            label="Player"
             onChange={(e) => onPlayerChange(e.target.value)}
           >
             {players.map((p) => (
@@ -66,27 +65,30 @@ export default function PlayerRow({
           </Select>
         </FormControl>
       </Grid>
-      <Grid item xs={6}>
-        <CommanderSearch
-          value={commander}
-          onChange={onCommanderChange}
-          recent={recent}
-          onRecentUpdate={onRecentUpdate}
-        />
-      </Grid>
+
+      {/* Commander + Winner */}
       <Grid
         item
-        xs={2}
+        xs={12}
+        sm={8}
         sx={{
           display: "flex",
-          justifyContent: "center",
           alignItems: "center",
+          justifyContent: "space-between",
+          mt: { xs: 1, sm: 0 },
         }}
       >
+        <Box sx={{ flex: 1, mr: 1, maxWidth: 280 }}>
+          <CommanderSearch
+            value={commander}
+            onChange={onCommanderChange}
+            recent={recent}
+            onRecentUpdate={onRecentUpdate}
+          />
+        </Box>
         <Checkbox
           sx={{
             transform: "scale(1.25)",
-            paddingLeft: 2,
           }}
           size="medium"
           checked={winner}
