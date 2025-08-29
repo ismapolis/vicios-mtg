@@ -17,5 +17,7 @@ export default defineConfig({
     proxy: {
       "/api": API_URL,
     },
+    host: "true",
+    allowedHosts: ["blog.ismapolis.com", "localhost", "127.0.0.1"],
   },
 });
